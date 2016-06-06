@@ -58,10 +58,15 @@ Var::Var(string V):Sym("var",V){}
 
 map<string,Sym*> glob;
 void glob_init() {
+	//---------------------------------------- metainfo
 	glob["MODULE"]	= new Str(MODULE);
 	glob["ABOUT"]	= new Str(ABOUT);
 	glob["AUTHOR"]	= new Str(AUTHOR);
 	glob["LICENSE"]	= new Str(LICENSE);
 	glob["GITHUB"]	= new Str(GITHUB);
 	glob["LOGO"]	= new Str(LOGO);
+	//---------------------------------------- constants
+	glob["sp"]		= new Str(" ");
+	glob["nl"]		= new Str("\n");
+	glob["tab"]		= new Str("\t");
 }
