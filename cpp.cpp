@@ -23,7 +23,17 @@ Sym* Sym::eval() {
 		(*it) = (*it)->eval();
 	return this; }
 
+Sym* Sym::eq(Sym*o) { glob[val]=o; return o; }
+Sym* Sym::at(Sym*o) { push(o); }
+
+Sym* Sym::add(Sym*o) { return new Error(head()+"+"+o->head()); }
+
+Sym* Sym::str() { return new Str(val); }
+
+Error::Error(string V):Sym("error",V) { yyerror(V); }
+
 Str::Str(string V):Sym("str",V){}
+Sym* Str::add(Sym*o) { return new Str(val+o->str()->val); }
 string Str::head() { string S = "'";
 	for (int i=0;i<val.length();i++)
 		switch (val[i]) {
@@ -36,8 +46,19 @@ string Str::head() { string S = "'";
 Vector::Vector():Sym("vector","[]"){}
 
 Op::Op(string V):Sym("op",V){}
+Sym* Op::eval() {
+	if (val=="~") return nest[0]; else Sym::eval();
+	if (val=="=") return nest[0]->eq(nest[1]);
+	if (val=="@") return nest[0]->at(nest[1]);
+	if (val=="+") return nest[0]->add(nest[1]);
+	return this; }
 
 map<string,Sym*> glob;
 void glob_init() {
-
+	glob["MODULE"]	= new Str(MODULE);
+	glob["ABOUT"]	= new Str(ABOUT);
+	glob["AUTHOR"]	= new Str(AUTHOR);
+	glob["LICENSE"]	= new Str(LICENSE);
+	glob["GITHUB"]	= new Str(GITHUB);
+	glob["LOGO"]	= new Str(LOGO);
 }
