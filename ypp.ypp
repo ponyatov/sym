@@ -1,0 +1,28 @@
+%{
+#include "hpp.hpp"
+%}
+%defines %union { Sym*o; }
+%token <o> SYM NUM STR DOC		/* symbol number 'string' "docstring" */
+%token <o> LP RP LQ RQ LC RC	/* brackets: () [] {} */
+%token <o> EQ AT TILD			/* operators: = @ ~ */
+%type <o> ex scalar vector
+
+%right EQ
+%left AT
+%left TILD
+%%
+REPL : | REPL ex { cout << $2->eval()->dump(); } ;
+scalar : SYM | NUM | STR ;
+ex : scalar
+	| ex DOC				{ $$=$1; $$->doc($2); }
+	| LP ex RP				{ $$=$2; }
+	| LQ vector RQ			{ $$=$2; }
+	| TILD ex				{ $$=$1; $$->push($2); }
+	| ex EQ ex				{ $$=$2; $$->push($1); $$->push($3); } 
+	| ex AT ex				{ $$=$2; $$->push($1); $$->push($3); } 
+;
+vector :					{ $$=new Vector(); }
+	| vector DOC			{ $$=$1; $$->doc($2); }
+	| vector ex				{ $$=$1; $$->push($2); }
+;
+%%

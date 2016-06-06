@@ -1,1 +1,44 @@
-src.src log.log ypp.ypp lpp.lpp hpp.hpp cpp.cpp Makefile .gitignore sh.sh bat.bat README.md
+# line comment
+
+skelex = [					" lexical skeleton program "
+	files = [					" files to be opened in editor "
+		src.src						" default source script "
+		log.log
+		core = [					" dynamic language core "
+			ypp.ypp 					" syntax parser /bison/ "
+			lpp.lpp						" lexer /flex/ "
+			hpp.hpp 					" headers "
+			cpp.cpp						" C++ core /g++/ "
+			Makefile					" build scripts /make/ "
+		]
+	] 
+	.gitignore					" file masks will be ignored by git "
+	vim = [ sh.sh bat.bat ]		" (g)vim helpers "
+	README.md
+]
+
+.end	directive
+
+.gitignore = [ *~ *.swp exe.exe log.log ypp.tab.?pp lex.yy.c ]
+
+README.md = [
+	'# '+MODULE
+	'### '+ABOUT
+	'\n(c) '+AUTHOR+' , '+LICENSE
+	'\ngithub: '+GITHUB
+]
+
+Makefile = [
+log.log: src.src ./exe.exe
+	./exe.exe < $< > $@ && tail $(TAIL) $@
+C = cpp.cpp ypp.tab.cpp lex.yy.c
+H = hpp.hpp ypp.tab.hpp meta.hpp
+CXXFLAGS += -std=gnu++11 -D MODULE=\"$(notdir $(CURDIR))\"
+./exe.exe: $(C) $(H)
+	$(CXX) $(CXXFLAGS) -o $@ $(C) $(L)
+ypp.tab.cpp: ypp.ypp
+	bison $<
+lex.yy.c: lpp.lpp
+	flex $<
+]
+
