@@ -17,16 +17,16 @@ skelex = [					" lexical skeleton program "
 	README.md
 ]
 
-.end	directive
-
-.gitignore = [ *~ *.swp exe.exe log.log ypp.tab.?pp lex.yy.c ]
+.gitignore = [ '*~' '*.swp' exe.exe log.log ypp.tab.cpp ypp.tab.hpp lex.yy.c ]
 
 README.md = [
-	'# '+MODULE
+	'# ![logo]('+LOGO+'.png) '+MODULE
 	'### '+ABOUT
 	'\n(c) '+AUTHOR+' , '+LICENSE
 	'\ngithub: '+GITHUB
 ]
+
+.end
 
 Makefile = [
 log.log: src.src ./exe.exe
@@ -41,4 +41,3 @@ ypp.tab.cpp: ypp.ypp
 lex.yy.c: lpp.lpp
 	flex $<
 ]
-
