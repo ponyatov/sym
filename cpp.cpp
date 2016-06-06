@@ -23,7 +23,8 @@ Sym* Sym::eval() {
 		(*it) = (*it)->eval();
 	return this; }
 
-Sym* Sym::eq(Sym*o) { glob[val]=o; return o; }
+Sym* Sym::eq(Sym*o) { Sym*V = new Var(str()->val); V->push(o);
+	glob[val]=V; return V; }
 Sym* Sym::at(Sym*o) { push(o); }
 
 Sym* Sym::add(Sym*o) { return new Error(head()+"+"+o->head()); }
@@ -52,6 +53,8 @@ Sym* Op::eval() {
 	if (val=="@") return nest[0]->at(nest[1]);
 	if (val=="+") return nest[0]->add(nest[1]);
 	return this; }
+
+Var::Var(string V):Sym("var",V){}
 
 map<string,Sym*> glob;
 void glob_init() {

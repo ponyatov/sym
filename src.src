@@ -1,5 +1,12 @@
 # line comment
 
+README.md = [
+	'# ![logo]('+LOGO+'.png) '+MODULE
+	'### '+ABOUT
+	'\n(c) '+AUTHOR+' , '+LICENSE
+	'\ngithub: '+GITHUB
+]
+
 skelex = [					" lexical skeleton program "
 	files = [					" files to be opened in editor "
 		src.src						" default source script "
@@ -12,21 +19,19 @@ skelex = [					" lexical skeleton program "
 			Makefile					" build scripts /make/ "
 		]
 	] 
-	.gitignore					" file masks will be ignored by git "
+	.gitignore					
 	vim = [ sh.sh bat.bat ]		" (g)vim helpers "
 	README.md
 ]
 
-.gitignore = [ '*~' '*.swp' exe.exe log.log ypp.tab.cpp ypp.tab.hpp lex.yy.c ]
-
-README.md = [
-	'# ![logo]('+LOGO+'.png) '+MODULE
-	'### '+ABOUT
-	'\n(c) '+AUTHOR+' , '+LICENSE
-	'\ngithub: '+GITHUB
+.gitignore = [ 					" file masks will be ignored by git "
+	'*~' '*.swp' 
+	exe.exe log.log 
+	ypp.tab.cpp ypp.tab.hpp 
+	lex.yy.c
 ]
 
-.end
+.end							
 
 Makefile = [
 log.log: src.src ./exe.exe
@@ -41,3 +46,4 @@ ypp.tab.cpp: ypp.ypp
 lex.yy.c: lpp.lpp
 	flex $<
 ]
+

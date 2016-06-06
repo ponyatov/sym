@@ -38,6 +38,8 @@ struct Vector: Sym { Vector(); };
 
 struct Op: Sym { Op(string); Sym*eval(); };
 
+struct Var: Sym { Var(string); };
+
 extern int yylex();
 extern int yylineno;
 extern char* yytext;

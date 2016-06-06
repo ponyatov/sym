@@ -16,8 +16,9 @@
 
 %left AT
 %left TILD
+%left DOC
 %%
-REPL : | REPL ex { cout << $2->eval()->dump(); } ;
+REPL : | REPL ex 			{ cout << $2->eval()->dump() << endl; } ;
 scalar : SYM | NUM | STR ;
 ex : scalar
 	| ex DOC				{ $$=$1; $$->doc($2); }
