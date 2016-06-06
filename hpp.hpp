@@ -9,6 +9,12 @@
 using namespace std;
 #include "meta.hpp"
 
+#ifndef __MINGW32__
+	#include "linux.hpp"	// and all POSIX systems
+#else
+	#include "win32.hpp"	// win32 specific code
+#endif
+
 struct Sym {
 	string tag,val;
 	Sym(string,string); Sym(string);
