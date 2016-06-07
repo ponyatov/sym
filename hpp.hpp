@@ -42,7 +42,7 @@ struct Error: Sym { Error(string); };
 
 struct Int: Sym { Int(string); Int(int); int val; string head(); };
 
-struct Str: Sym { Str(string); string head(); Sym*add(Sym*); };
+struct Str: Sym { Str(string); string head(); Sym*add(Sym*); Sym*eval(); };
 
 struct Vector: Sym { Vector(); Sym*str(); Sym*div(Sym*); Sym*add(Sym*);
 	static Sym* _plain(Sym*); };

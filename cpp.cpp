@@ -42,6 +42,7 @@ string Int::head() { ostringstream os;
 	os << "<" << tag << ":" << val << ">"; return os.str(); }
 
 Str::Str(string V):Sym("str",V){}
+Sym* Str::eval() { return this; }
 Sym* Str::add(Sym*o) { return new Str(val+o->str()->val); }
 string Str::head() { string S = "'";
 	for (int i=0;i<val.length();i++)
