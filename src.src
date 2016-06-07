@@ -1,6 +1,7 @@
 # line comment
 
-next = dir@MODULE next
+next = dir@MODULE		" next generation "
+
 README.md = next/'README.md'
 
 README.md = [
@@ -8,6 +9,10 @@ README.md = [
 	'### '+ABOUT
 	'\n(c) '+AUTHOR+' , '+LICENSE
 	'\ngithub: '+GITHUB
+]/nl+nl
+
+( .gitignore = next/'gitignore' ) = [	" file masks will be ignored by git "
+	'*~' '*swp' exe.exe log.log ypp.tab.cpp ypp.tab.hpp lex.yy.c MODULE+'/'
 ]/nl+nl
 
 .end
@@ -29,7 +34,9 @@ skelex = [					" lexical skeleton program "
 	README.md
 ]
 
-.gitignore = [ 					" file masks will be ignored by git "
+.end
+
+.gitignore = [ 					
 	'*~' '*.swp' 
 	exe.exe log.log 
 	ypp.tab.cpp ypp.tab.hpp 

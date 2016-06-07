@@ -8,6 +8,7 @@
 %token <o> ADD SUB MUL DIV POW	/* operators: + - * / ^					*/
 %type <o> ex scalar vector
 
+%left DOC
 %right EQ
 
 %left ADD SUB
@@ -16,7 +17,6 @@
 
 %left AT
 %left TILD
-%left DOC
 %%
 REPL : | REPL ex 			{ cout << $2->eval()->dump() << endl; } ;
 scalar : SYM | NUM | STR ;

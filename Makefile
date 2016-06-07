@@ -12,6 +12,9 @@ lex.yy.c: lpp.lpp
 	flex $<
 
 .PHONY: upgrade
-upgrade: README.md
+upgrade: README.md .gitignore
 %: $(MODULE)/%
 	cp $< $@
+.gitignore: $(MODULE)/gitignore
+	cp $< $@
+	
