@@ -37,11 +37,29 @@ skelex = [						" lexical skeleton program "
 ( sh.sh	  = next/sh.sh   ) = [ '#!/bin/sh'  'gvim -p '+files/sp ]/nl+nl
 ( bat.bat = next/bat.bat ) = [ '@start .'  '@gvim -p '+files/sp ]/nl+nl 
 
+exe.exe = './exe.exe'
+( Makefile = next/'Makefile' ) = [
+
+	[ '#' MODULE ':' ABOUT]/sp nl
+	[ '#' '(c)' AUTHOR ',' LICENSE ]/sp nl
+	'MODULE = $(notdir $(CURDIR))' nl
+	['OS''?=''linux']/sp nl
+	[ log.log ':' src.src exe.exe ]/sp nl
+	tab [ exe.exe '<' '$<' '>' '$>' log.log '&&' 'tail' '$(TAIL)' '$@' ]/sp nl
+	
+	[ 'C''=' cpp.cpp '$(OS).cpp' ypp.tab.cpp lex.yy.c ]/sp nl 
+	[ 'H''=' hpp.hpp '$(OS).hpp' ypp.tab.hpp meta.hpp ]/sp nl
+	
+	[ 'CXXFLAGS''+=''-std=gnu++11''-D''MODULE=\"$(MODULE)\"']/sp nl
+	[ exe.exe ':' '$(C)' '$(H)' ]/sp nl
+	tab [ '$(CXX)' '$(CXXFLAGS)' '-o' '$@' '$(C)' '$(L)' ]/sp nl
+	
+	[ ypp.tab.cpp ':' ypp.ypp ]/sp nl tab bison sp '$<' nl
+	[ lex.yy.c ':' lpp.lpp ]/sp nl tab flex sp '$<' nl
+]
+
 .end
 
-Makefile = [
-log.log: src.src ./exe.exe
-	./exe.exe < $< > $@ && tail $(TAIL) $@
 C = cpp.cpp ypp.tab.cpp lex.yy.c
 H = hpp.hpp ypp.tab.hpp meta.hpp
 CXXFLAGS += -std=gnu++11 -D MODULE=\"$(notdir $(CURDIR))\"
