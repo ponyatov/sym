@@ -12,7 +12,11 @@ README.md = [
 ]/nl+nl
 
 ( .gitignore = next/'gitignore' ) = [	" file masks will be ignored by git "
-	'*~' '*swp' exe.exe log.log ypp.tab.cpp ypp.tab.hpp lex.yy.c MODULE+'/'
+	'*~' '*swp'
+	exe.exe log.log
+	ypp.tab.cpp ypp.tab.hpp
+	lex.yy.c
+	MODULE+'/'
 ]/nl+nl
 
 .end
