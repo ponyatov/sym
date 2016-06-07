@@ -4,6 +4,7 @@
 #include <iostream>
 #include <sstream>
 #include <cstdlib>
+#include <cassert>
 #include <vector>
 #include <map>
 using namespace std;
@@ -22,10 +23,14 @@ struct Sym {
 	map<string,Sym*> pars; void doc(Sym*);
 	virtual string dump(int=0); virtual string head(); string pad(int);
 	virtual Sym* eval();
+	virtual Sym* str();
 	virtual Sym* eq(Sym*);
 	virtual Sym* at(Sym*);
 	virtual Sym* add(Sym*);
-	virtual Sym* str();
+	virtual Sym* sub(Sym*);
+	virtual Sym* mul(Sym*);
+	virtual Sym* div(Sym*);
+	virtual Sym* pow(Sym*);
 };
 extern map<string,Sym*> glob;
 extern void glob_init();
@@ -34,9 +39,14 @@ struct Error: Sym { Error(string); };
 
 struct Str: Sym { Str(string); string head(); Sym*add(Sym*); };
 
-struct Vector: Sym { Vector(); };
+struct Vector: Sym { Vector(); Sym*str(); Sym*div(Sym*); Sym*add(Sym*); };
 
 struct Op: Sym { Op(string); Sym*eval(); };
+typedef Sym* (*FN)(Sym*);
+struct Fn: Sym { Fn(string,FN); FN fn; Sym*at(Sym*); };
+
+struct Dir: Sym { Dir(string); static Sym* dir(Sym*); Sym*div(Sym*o); };
+struct File: Sym { File(string); ~File(); static Sym* file(Sym*); FILE*fh; Sym*eq(Sym*o); };
 
 struct Var: Sym { Var(string); };
 

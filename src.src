@@ -1,11 +1,16 @@
 # line comment
 
+next = dir@MODULE next
+README.md = next/'README.md'
+
 README.md = [
 	'# ![logo]('+LOGO+'.png) '+MODULE
 	'### '+ABOUT
 	'\n(c) '+AUTHOR+' , '+LICENSE
 	'\ngithub: '+GITHUB
-]
+]/nl+nl
+
+.end
 
 skelex = [					" lexical skeleton program "
 	files = [					" files to be opened in editor "

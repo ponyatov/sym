@@ -23,11 +23,14 @@ Sym* Sym::eval() {
 		(*it) = (*it)->eval();
 	return this; }
 
-Sym* Sym::eq(Sym*o) { Sym*V = new Var(str()->val); V->push(o);
-	glob[val]=V; return V; }
+Sym* Sym::eq(Sym*o) { glob[val]=o; return o; }
 Sym* Sym::at(Sym*o) { push(o); }
 
-Sym* Sym::add(Sym*o) { return new Error(head()+"+"+o->head()); }
+Sym* Sym::add(Sym*o) { return new Error(head()+" + "+o->head()); }
+Sym* Sym::sub(Sym*o) { return new Error(head()+" - "+o->head()); }
+Sym* Sym::mul(Sym*o) { return new Error(head()+" * "+o->head()); }
+Sym* Sym::div(Sym*o) { return new Error(head()+" / "+o->head()); }
+Sym* Sym::pow(Sym*o) { return new Error(head()+" ^ "+o->head()); }
 
 Sym* Sym::str() { return new Str(val); }
 
@@ -45,6 +48,16 @@ string Str::head() { string S = "'";
 	return S+"'"; }
 
 Vector::Vector():Sym("vector","[]"){}
+Sym* Vector::add(Sym*o) { push(o); return this; }
+Sym* Vector::div(Sym*o) { Vector *V = new Vector();
+	for (auto it=nest.begin(),e=nest.end();it!=e;it++) {
+		V->push(*it); V->push(o); }
+	V->nest.pop_back();
+	return V; }
+Sym* Vector::str() { string S;
+	for (auto it=nest.begin(),e=nest.end();it!=e;it++)
+		S += (*it)->str()->val;
+	return new Str(S); }
 
 Op::Op(string V):Sym("op",V){}
 Sym* Op::eval() {
@@ -52,7 +65,20 @@ Sym* Op::eval() {
 	if (val=="=") return nest[0]->eq(nest[1]);
 	if (val=="@") return nest[0]->at(nest[1]);
 	if (val=="+") return nest[0]->add(nest[1]);
+	if (val=="/") return nest[0]->div(nest[1]);
 	return this; }
+
+Fn::Fn(string V, FN F):Sym("fn",V) { fn=F; }
+Sym* Fn::at(Sym*o) { return fn(o); }
+
+Sym* Dir::dir(Sym*o) { return new Dir(o->val); }
+Sym* Dir::div(Sym*o) { return new File(val+"/"+o->val); }
+
+File::File(string V):Sym("file",V) {
+	fh=fopen(val.c_str(),"w"); assert(fh!=NULL); }
+File::~File() { if (fh) fclose(fh); }
+Sym* File::eq(Sym*o) { fprintf(fh,"%s",o->str()->val.c_str());
+	return o; }
 
 Var::Var(string V):Sym("var",V){}
 
@@ -69,4 +95,6 @@ void glob_init() {
 	glob["sp"]		= new Str(" ");
 	glob["nl"]		= new Str("\n");
 	glob["tab"]		= new Str("\t");
+	//---------------------------------------- file i/o
+	glob["dir"]		= new Fn("dir",Dir::dir);
 }
