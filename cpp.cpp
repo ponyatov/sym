@@ -79,6 +79,7 @@ File::File(string V):Sym("file",V) {
 File::~File() { if (fh) fclose(fh); }
 Sym* File::eq(Sym*o) { fprintf(fh,"%s",o->str()->val.c_str());
 	return o; }
+Sym* File::file(Sym*o) { return new File(o->val.c_str()); }
 
 Var::Var(string V):Sym("var",V){}
 
@@ -97,4 +98,5 @@ void glob_init() {
 	glob["tab"]		= new Str("\t");
 	//---------------------------------------- file i/o
 	glob["dir"]		= new Fn("dir",Dir::dir);
+	glob["file"]	= new Fn("file",File::file);
 }
