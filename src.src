@@ -57,17 +57,3 @@ exe.exe = './exe.exe'
 	[ ypp.tab.cpp ':' ypp.ypp ]/sp nl tab bison sp '$<' nl
 	[ lex.yy.c ':' lpp.lpp ]/sp nl tab flex sp '$<' nl
 ]
-
-.end
-
-C = cpp.cpp ypp.tab.cpp lex.yy.c
-H = hpp.hpp ypp.tab.hpp meta.hpp
-CXXFLAGS += -std=gnu++11 -D MODULE=\"$(notdir $(CURDIR))\"
-./exe.exe: $(C) $(H)
-	$(CXX) $(CXXFLAGS) -o $@ $(C) $(L)
-ypp.tab.cpp: ypp.ypp
-	bison $<
-lex.yy.c: lpp.lpp
-	flex $<
-]
-
