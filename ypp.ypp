@@ -15,7 +15,7 @@
 %left MUL DIV
 %left POW
 
-%left AT
+%right AT
 %left TILD
 %%
 REPL : | REPL ex 			{ cout << $2->eval()->dump() << endl; } ;

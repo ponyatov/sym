@@ -24,7 +24,7 @@ Sym* Sym::eval() {
 	return this; }
 
 Sym* Sym::eq(Sym*o) { glob[val]=o; return o; }
-Sym* Sym::at(Sym*o) { push(o); }
+Sym* Sym::at(Sym*o) { push(o); return this; }
 
 Sym* Sym::add(Sym*o) { return new Error(head()+" + "+o->head()); }
 Sym* Sym::sub(Sym*o) { return new Error(head()+" - "+o->head()); }
@@ -35,6 +35,11 @@ Sym* Sym::pow(Sym*o) { return new Error(head()+" ^ "+o->head()); }
 Sym* Sym::str() { return new Str(val); }
 
 Error::Error(string V):Sym("error",V) { yyerror(V); }
+
+Int::Int(string V):Sym("int",V) { val=atoi(V.c_str()); }
+Int::Int(int I):Sym("int","") { val=I; }
+string Int::head() { ostringstream os;
+	os << "<" << tag << ":" << val << ">"; return os.str(); }
 
 Str::Str(string V):Sym("str",V){}
 Sym* Str::add(Sym*o) { return new Str(val+o->str()->val); }
@@ -58,6 +63,20 @@ Sym* Vector::str() { string S;
 	for (auto it=nest.begin(),e=nest.end();it!=e;it++)
 		S += (*it)->str()->val;
 	return new Str(S); }
+
+Sym* Vector::_plain(Sym*o) { return o->plain(); }
+int Sym::sz() { return nest.size(); }
+Sym* Sym::sz(Sym*o) { return new Int(o->sz()); }
+Sym* Sym::plain() { Sym*L = new Vector(); Sym*T=NULL;
+	for (auto it=nest.begin(),e=nest.end();it!=e;it++)
+		if ((*it)->sz()==0)
+			L -> push(*it);
+		else {
+			T = (*it)->plain();
+			for (auto in=T->nest.begin(),ee=T->nest.end();in!=ee;in++)
+				L->push(*in);
+		}
+	return L; }
 
 Op::Op(string V):Sym("op",V){}
 Sym* Op::eval() {
@@ -96,6 +115,9 @@ void glob_init() {
 	glob["sp"]		= new Str(" ");
 	glob["nl"]		= new Str("\n");
 	glob["tab"]		= new Str("\t");
+	//---------------------------------------- vector manipulations
+	glob["plain"]	= new Fn("plain",Vector::_plain);
+	glob["sz"]		= new Fn("sz",Sym::sz);
 	//---------------------------------------- file i/o
 	glob["dir"]		= new Fn("dir",Dir::dir);
 	glob["file"]	= new Fn("file",File::file);

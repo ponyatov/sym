@@ -1,10 +1,8 @@
 # line comment
 
-next = dir@MODULE		" next generation "
+next = dir@MODULE						" next generation "
 
-README.md = next/'README.md'
-
-README.md = [
+( README.md = next/'README.md' ) = [
 	'# ![logo]('+LOGO+'.png) '+MODULE
 	'### '+ABOUT
 	'\n(c) '+AUTHOR+' , '+LICENSE
@@ -19,10 +17,8 @@ README.md = [
 	MODULE+'/'
 ]/nl+nl
 
-.end
-
-skelex = [					" lexical skeleton program "
-	files = [					" files to be opened in editor "
+skelex = [						" lexical skeleton program "
+	files = plain @ [				" files to be opened in editor "
 		src.src						" default source script "
 		log.log
 		core = [					" dynamic language core "
@@ -38,16 +34,10 @@ skelex = [					" lexical skeleton program "
 	README.md
 ]
 
+( sh.sh	  = next/sh.sh   ) = [ '#!/bin/sh'  'gvim -p '+files/sp ]/nl+nl
+( bat.bat = next/bat.bat ) = [ '@start .'  '@gvim -p '+files/sp ]/nl+nl 
+
 .end
-
-.gitignore = [ 					
-	'*~' '*.swp' 
-	exe.exe log.log 
-	ypp.tab.cpp ypp.tab.hpp 
-	lex.yy.c
-]
-
-.end							
 
 Makefile = [
 log.log: src.src ./exe.exe

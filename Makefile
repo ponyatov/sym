@@ -12,7 +12,7 @@ lex.yy.c: lpp.lpp
 	flex $<
 
 .PHONY: upgrade
-upgrade: README.md .gitignore
+upgrade: README.md .gitignore bat.bat sh.sh
 %: $(MODULE)/%
 	cp $< $@
 .gitignore: $(MODULE)/gitignore

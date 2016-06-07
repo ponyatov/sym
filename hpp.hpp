@@ -31,15 +31,21 @@ struct Sym {
 	virtual Sym* mul(Sym*);
 	virtual Sym* div(Sym*);
 	virtual Sym* pow(Sym*);
+	virtual Sym* plain();
+	virtual int sz();
+	static Sym* sz(Sym*);
 };
 extern map<string,Sym*> glob;
 extern void glob_init();
 
 struct Error: Sym { Error(string); };
 
+struct Int: Sym { Int(string); Int(int); int val; string head(); };
+
 struct Str: Sym { Str(string); string head(); Sym*add(Sym*); };
 
-struct Vector: Sym { Vector(); Sym*str(); Sym*div(Sym*); Sym*add(Sym*); };
+struct Vector: Sym { Vector(); Sym*str(); Sym*div(Sym*); Sym*add(Sym*);
+	static Sym* _plain(Sym*); };
 
 struct Op: Sym { Op(string); Sym*eval(); };
 typedef Sym* (*FN)(Sym*);
