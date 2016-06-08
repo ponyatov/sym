@@ -16,6 +16,7 @@ string LexString;
 <docstring>\\n		{LexString+='\n';}
 <docstring>\\t		{LexString+='\t';}
 <docstring>\n		{LexString+=yytext[0];}
+<docstring>\\.		{LexString+=yytext[1];}
 <docstring>.		{LexString+=yytext[0];}
 
 '					{BEGIN(lexstring); LexString=""; }
@@ -23,6 +24,7 @@ string LexString;
 <lexstring>\\n		{LexString+='\n';}
 <lexstring>\\t		{LexString+='\t';}
 <lexstring>\n		{LexString+=yytext[0];}
+<lexstring>\\.		{LexString+=yytext[1];}
 <lexstring>.		{LexString+=yytext[0];}
 
 \(					TOC(Op,LP)
