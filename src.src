@@ -2,7 +2,7 @@
 
 next = dir@MODULE						" next generation "
 
-( README.md = next/'README.md' ) = [
+( README.md = next/'README.md' ) = [	" README "
 	'# ![logo]('+LOGO+'.png) '+MODULE
 	'### '+ABOUT
 	'\n(c) '+AUTHOR+' , '+LICENSE
@@ -12,8 +12,7 @@ next = dir@MODULE						" next generation "
 ( .gitignore = next/'gitignore' ) = [	" file masks will be ignored by git "
 	'*~' '*swp'
 	exe.exe log.log
-	ypp.tab.cpp ypp.tab.hpp
-	lex.yy.c
+	'ypp.tab.?pp' lex.yy.c
 	MODULE+'/'
 ]/nl+nl
 
