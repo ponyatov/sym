@@ -1,14 +1,16 @@
+~MODULE	= 'sym'
+~BRANCH	= 'wam'
 ~ABOUT = '[W]arren\'s [A]bstract [M]achine branch: Prolog engine hacking'
+~GITHUB	= 'https://github.com/ponyatov/'+MODULE+'/tree/'+BRANCH
 
-.end
-
-next = dir@MODULE						" next generation "
-
-( README.md = next/'README.md' ) = [	" README "
-	'# ![logo]('+LOGO+'.png) '+MODULE+':wam'
-	'### '+ABOUT
-	'\n(c) '+AUTHOR+' , '+LICENSE
-	'\ngithub: '+GITHUB ''
+README.md = [
+	[ '#' MODULE ':' BRANCH ] ^sp
+	[ '###' ABOUT ] ^sp
+	''
+	[ '(c)' AUTHOR ',' LICENSE ] ^sp
+	''
+	[ 'github:' GITHUB ] ^sp
+	''
 	'* https://en.wikipedia.org/wiki/Warren_Abstract_Machine'
 	'* http://wambook.sourceforge.net/'
-]/nl+nl
+]^nl+nl

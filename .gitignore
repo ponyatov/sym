@@ -2,7 +2,5 @@
 *swp
 exe.exe
 log.log
-ypp.tab.cpp
-ypp.tab.hpp
+ypp.tab.?pp
 lex.yy.c
-sym/
