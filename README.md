@@ -1,7 +1,7 @@
 # sym : wam
 ### [W]arren's [A]bstract [M]achine branch: Prolog engine hacking
 
-(c) Dmitry Ponyatov <dponyatov@gmail.com> , GNU LesserGPL
+(c) Dmitry Ponyatov <<dponyatov@gmail.com>> , GNU LesserGPL
 
 github: https://github.com/ponyatov/sym/tree/wam
 

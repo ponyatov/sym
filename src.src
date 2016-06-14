@@ -1,18 +1,24 @@
 A()
 b(C)
 D(E F)
-G ( H ( P() ) E )
+G ( H ( X() ) E )
 
 P(Z,h(Z,W),f(W))
 
 .end
 
-~MODULE	= 'sym'
-~BRANCH	= 'wam'
-~ABOUT = '[W]arren\'s [A]bstract [M]achine branch: Prolog engine hacking'
-~GITHUB	= 'https://github.com/ponyatov/'+MODULE+'/tree/'+BRANCH
+skelex = [ src.src log.log ]
+log.log@a
+log.log@b
+log.log@c
+skelex
+log.log "this is log" = ["empty file"]
+skelex
+log.log "this is log"
 
-README.md = [
+.end
+
+README.md = ~([
 	[ '#' MODULE ':' BRANCH ] ^sp
 	[ '###' ABOUT ] ^sp
 	''
@@ -22,4 +28,25 @@ README.md = [
 	''
 	'* https://en.wikipedia.org/wiki/Warren_Abstract_Machine'
 	'* http://wambook.sourceforge.net/'
-]^nl+nl
+]^nl+nl)
+
+meta.hpp = ~([
+'#ifndef _H_META'
+'#define _H_META'
+'#define MODULE	"'+MODULE+'"'
+'#define BRANCH	"'+BRANCH+'"'
+'#define ABOUT	"'+ABOUT+'"'
+'#define AUTHOR	"'+AUTHOR+'"'
+'#define LICENSE	"'+LICENSE+'"'
+'#define GITHUB	("https://github.com/ponyatov/" MODULE "/tree/" BRANCH)'
+'#endif // _H_META'
+]^nl+nl)
+
+MODULE	= 'sym'
+BRANCH	= 'wam'
+ABOUT	= '[W]arren\'s [A]bstract [M]achine branch: Prolog engine hacking'
+GITHUB	= 'https://github.com/ponyatov/'+MODULE+'/tree/'+BRANCH
+
+$README.md
+
+$meta.hpp
