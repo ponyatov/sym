@@ -1,10 +1,10 @@
 ~MODULE	= 'sym'
-~BRANCH	= 'mini'
-~ABOUT	= 'minimal lexical program skeleton & DLR'
+~BRANCH	= 'master'
+~ABOUT	= 'Reference SYMbolic Engine (Dynamic Language Runtime)'
 ~GITHUB	= 'https://github.com/ponyatov/'+MODULE+'/tree/'+BRANCH
 
 README.md = [
-	[ '#' MODULE ':' BRANCH ] ^sp
+	[ '#' '![logo]('+LOGO+'.png)' MODULE ':' BRANCH ] ^sp
 	[ '###' ABOUT ] ^sp
 	''
 	[ '(c)' AUTHOR ',' LICENSE ] ^sp
