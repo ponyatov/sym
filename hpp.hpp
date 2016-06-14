@@ -14,7 +14,7 @@ struct Sym {
 	Sym(string,string); Sym(string);
 	vector<Sym*> nest; void push(Sym*); Sym* pop();
 	virtual string dump(int=0); virtual string head();
-	static string pad(int); static string i2s(long);
+	static string pad(int); static string i2s(long); static string p2s(Sym*);
 	virtual Sym* str();
 	virtual Sym* eval();
 	virtual Sym* eq(Sym*);
