@@ -3,14 +3,14 @@
 ~ABOUT	= 'Reference SYMbolic Engine (Dynamic Language Runtime)'
 ~GITHUB	= 'https://github.com/ponyatov/'+MODULE+'/tree/'+BRANCH
 
-README.md = [
+README.md = ~([
 	[ '#' '![logo]('+LOGO+'.png)' MODULE ':' BRANCH ] ^sp
 	[ '###' ABOUT ] ^sp
 	''
 	[ '(c)' AUTHOR ',' LICENSE ] ^sp
 	''
 	[ 'github:' GITHUB ] ^sp
-]^nl+nl
+]^nl+nl)
 
 .gitignore = [ '*~' '*swp' exe.exe log.log ypp.tab.?pp lex.yy.c ]^nl
 
@@ -38,3 +38,6 @@ skelex = [
 	README.md
 	.gitignore
 ]
+
+$README.md
+$skelex
