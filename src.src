@@ -1,3 +1,10 @@
+A()
+b(C)
+D(E F)
+G ( H ( P() ) E )
+
+.end
+
 ~MODULE	= 'sym'
 ~BRANCH	= 'wam'
 ~ABOUT = '[W]arren\'s [A]bstract [M]achine branch: Prolog engine hacking'

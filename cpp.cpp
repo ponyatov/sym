@@ -8,8 +8,10 @@ Sym::Sym(string V):Sym("sym",V) {}
 void Sym::push(Sym*o) { nest.push_back(o); }
 Sym* Sym::pop() { auto R = nest.end(); nest.pop_back(); return *R; }
 
-string Sym::head() { return "<"+tag+":"+val+">"; }
 string Sym::pad(int n) { string S; for (int i=0;i<n;i++) S+='\t'; return S; }
+string Sym::i2s(int n) { ostringstream os; os<<n; return os.str(); }
+
+string Sym::head() { return "<"+tag+":"+val+">"; }
 string Sym::dump(int depth) { string S = "\n"+pad(depth)+head();
 for (auto it=nest.begin(),e=nest.end();it!=e;it++)
 	S += (*it)->dump(depth+1);
@@ -60,6 +62,11 @@ Sym* Op::eval() {
 
 Fn::Fn(string V, FN F):Sym("fn",V) { fn=F; }
 Sym* Fn::at(Sym*o) { return fn(o); }
+
+Term::Term(Sym*A,Sym*B):Sym("term",A->str()->val) {
+	for (auto it=B->nest.begin(),e=B->nest.end();it!=e;it++,arity++)
+		push(*it); }
+string Term::head() { return val+"/"+i2s(arity); }
 
 map<string,Sym*> glob;
 void glob_init() {

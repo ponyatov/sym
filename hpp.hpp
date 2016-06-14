@@ -2,6 +2,7 @@
 #define _H_HPP
 
 #include <iostream>
+#include <sstream>
 #include <cstdlib>
 #include <vector>
 #include <map>
@@ -12,7 +13,8 @@ struct Sym {
 	string tag,val;
 	Sym(string,string); Sym(string);
 	vector<Sym*> nest; void push(Sym*); Sym* pop();
-	virtual string dump(int=0); virtual string head(); string pad(int);
+	virtual string dump(int=0); virtual string head();
+	static string pad(int); static string i2s(int);
 	virtual Sym* str();
 	virtual Sym* eval();
 	virtual Sym* eq(Sym*);
@@ -35,6 +37,8 @@ struct Op: Sym { Op(string); Sym*eval(); };
 
 typedef Sym*(*FN)(Sym*);
 struct Fn: Sym { Fn(string,FN); FN fn; Sym*at(Sym*); };
+
+struct Term : Sym { Term(Sym*,Sym*); string head(); int arity=0; };
 
 extern int yylex();
 extern int yylineno;
