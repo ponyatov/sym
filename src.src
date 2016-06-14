@@ -3,6 +3,8 @@ b(C)
 D(E F)
 G ( H ( P() ) E )
 
+P(Z,h(Z,W),f(W))
+
 .end
 
 ~MODULE	= 'sym'

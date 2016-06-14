@@ -3,15 +3,15 @@
 void yyerror(string msg) { cout<<YYERR; cerr<<YYERR; exit(-1); }
 int main() { glob_init(); return yyparse(); }
 
-Sym::Sym(string T,string V) { tag=T; val=V; }
+Sym::Sym(string T,string V) { tag=T; val=V; glob[val]=this; }
 Sym::Sym(string V):Sym("sym",V) {}
 void Sym::push(Sym*o) { nest.push_back(o); }
 Sym* Sym::pop() { auto R = nest.end(); nest.pop_back(); return *R; }
 
 string Sym::pad(int n) { string S; for (int i=0;i<n;i++) S+='\t'; return S; }
-string Sym::i2s(int n) { ostringstream os; os<<n; return os.str(); }
+string Sym::i2s(long n) { ostringstream os; os<<n; return os.str(); }
 
-string Sym::head() { return "<"+tag+":"+val+">"; }
+string Sym::head() { return "<"+tag+":"+val+">"+" @"+i2s((long)this); }
 string Sym::dump(int depth) { string S = "\n"+pad(depth)+head();
 for (auto it=nest.begin(),e=nest.end();it!=e;it++)
 	S += (*it)->dump(depth+1);
@@ -66,7 +66,7 @@ Sym* Fn::at(Sym*o) { return fn(o); }
 Term::Term(Sym*A,Sym*B):Sym("term",A->str()->val) {
 	for (auto it=B->nest.begin(),e=B->nest.end();it!=e;it++,arity++)
 		push(*it); }
-string Term::head() { return val+"/"+i2s(arity); }
+string Term::head() { return val+"/"+i2s(arity)+" @"+i2s((long)this); }
 
 map<string,Sym*> glob;
 void glob_init() {
