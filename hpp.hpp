@@ -14,7 +14,7 @@ struct Sym {
 	Sym(string,string); Sym(string);
 	vector<Sym*> nest; void push(Sym*); Sym* pop();
 	virtual string dump(int=0); virtual string head();
-	static string pad(int); static string i2s(int);
+	static string pad(int); static string i2s(long);
 	virtual Sym* str();
 	virtual Sym* eval();
 	virtual Sym* eq(Sym*);
@@ -43,7 +43,9 @@ struct Term : Sym { Term(Sym*,Sym*); string head(); int arity=0; };
 extern int yylex();
 extern int yylineno;
 extern char* yytext;
-#define TOC(C,X) { yylval.o = new C(yytext); return X; }
+#define TOC(C,X) { yylval.o = glob[yytext]; \
+       if (!yylval.o) yylval.o = new C(yytext); \
+       return X; }
 extern int yyparse();
 extern void yyerror(string);
 #include "ypp.tab.hpp"
