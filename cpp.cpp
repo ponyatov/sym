@@ -12,19 +12,21 @@ string Sym::pad(int n) { string S; for (int i=0;i<n;i++) S+='\t'; return S; }
 string Sym::i2s(long n) { ostringstream os; os<<n; return os.str(); }
 string Sym::p2s(Sym*o) { ostringstream os; os<<o; return os.str(); }
 
-string Sym::head() { return "<"+tag+":"+val+"> @"+p2s(this); }
+string Sym::head() { return "<"+tag+":"+val+"> @"+p2s(this)+" "+doc; }
 string Sym::dump(int depth) { string S = "\n"+pad(depth)+head();
 for (auto it=nest.begin(),e=nest.end();it!=e;it++)
 	S += (*it)->dump(depth+1);
 return S; }
 
 Sym* Sym::eval() {
-	Sym*G = glob[val]; if (G) return (G);
+	Sym*G = glob[val]; if (G) return (G); else share();
 	for (auto it=nest.begin(),e=nest.end();it!=e;it++)
 		(*it) = (*it)->eval();
 	return this; }
+void Sym::share() { glob[val]=this; }
 
-Sym* Sym::eq(Sym*o) { glob[val]=new Var(val,o); return glob[val]; }
+Sym* Sym::eq(Sym*o) { nest.assign(1,o); return this; }//glob[val]=new Var(val,o); return glob[val]; }
+Sym* Sym::at(Sym*o) { push(o); return this; }
 
 Sym* Sym::add(Sym*o) { return new Error(head()+" + "+o->head()); }
 Sym* Sym::div(Sym*o) { return new Error(head()+" / "+o->head()); }
@@ -38,10 +40,13 @@ Var::Var(string V,Sym*o):Sym("var",V){ push(o); }
 Sym* Var::str() { return nest[0]->str(); }
 
 Str::Str(string V):Sym("str",V){}
+void Str::share(){}
 string Str::head() { return "'"+val+"' @"+p2s(this); }
 Sym* Str::add(Sym*o) { return new Str(val+o->str()->val); }
+Sym* Str::eq(Sym*o) { val=o->str()->val; return this; }
 
 Vector::Vector():Sym("vector","[]"){}
+void Vector::share(){}
 Sym* Vector::div(Sym*o) { Sym*V =new Vector();
 	for (auto it=nest.begin(),e=nest.end();it!=e;it++) {
 		V->push(*it); V->push(o); }
@@ -53,9 +58,13 @@ Sym* Vector::str() { string S;
 Sym* Vector::pow(Sym*o) { return div(o)->str(); }
 
 Op::Op(string V):Sym("op",V){}
+void Op::share(){}
 Sym* Op::eval() {
 	if (val=="~") return nest[0]; else Sym::eval();
+	if (val=="$") return nest[0]->eval()->nest[0]->eval();
+	if (val=="doc") { nest[0]->doc=nest[1]->val; return nest[0]; }
 	if (val=="=") return nest[0]->eq(nest[1]);
+	if (val=="@") return nest[0]->at(nest[1]);
 	if (val=="+") return nest[0]->add(nest[1]);
 	if (val=="/") return nest[0]->div(nest[1]);
 	if (val=="^") return nest[0]->pow(nest[1]);

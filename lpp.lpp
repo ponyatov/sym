@@ -5,13 +5,20 @@ string LexString;
 %option noyywrap
 %option yylineno
 %x lexstring
+%x docstring
 %%
 #[^\n]*				{}
 ^\.end				{yyterminate();}
 
 '					{BEGIN(lexstring); LexString=""; }
 <lexstring>'		{BEGIN(INITIAL); yylval.o=new Str(LexString); return STR; }
+<lexstring>\\.		{LexString+=yytext[1];}
 <lexstring>.		{LexString+=yytext[0];}
+
+\"					{BEGIN(docstring); LexString=""; }
+<docstring>\"		{BEGIN(INITIAL); yylval.o=new Str(LexString); return DOC; }
+<docstring>\\.		{LexString+=yytext[1];}
+<docstring>.		{LexString+=yytext[0];}
 
 \(					TOC(Op,LP)			/* brackets */
 \)					TOC(Op,RP)
@@ -29,6 +36,9 @@ string LexString;
 \*					TOC(Op,MUL)
 \/					TOC(Op,DIV)
 \^					TOC(Op,POW)
+
+\,					TOC(Op,COMMA)
+\$					TOC(Op,DOLLAR)
 
 [a-zA-Z0-9_.?]+		TOC(Sym,SYM)		/* symbol */
 

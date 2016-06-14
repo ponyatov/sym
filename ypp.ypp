@@ -4,8 +4,9 @@
 %defines %union { Sym*o; }
 %token <o> SYM NUM STR DOC		/* symbol number 'string' "docstring"	*/
 %token <o> LP RP LQ RQ LC RC	/* brackets: () [] {}					*/
-%token <o> EQ AT TILD			/* operators: = @ ~						*/
+%token <o> EQ AT TILD COMMA		/* operators: = @ ~	,					*/
 %token <o> ADD SUB MUL DIV POW	/* operators: + - * / ^					*/
+%token <o> DOLLAR
 %type <o> ex scalar vector		/* expression scalar [vec tor]			*/
 
 %right EQ					/* operators priority */
@@ -14,14 +15,16 @@
 %left POW
 %right AT
 %left TILD
-
+%left DOC
 %%
 REPL : | REPL ex 			{ cout << $2->eval()->dump() << endl; } ;
 scalar : SYM | NUM | STR ;
 ex : scalar
+	| ex DOC				{ $$=new Op("doc"); $$->push($1); $$->push($2); }
 	| LP ex RP				{ $$=$2; }
 	| LQ vector RQ			{ $$=$2; }
 	| TILD ex				{ $$=$1; $$->push($2); }
+	| DOLLAR ex				{ $$=$1; $$->push($2); }
 	| ex EQ ex				{ $$=$2; $$->push($1); $$->push($3); } 
 	| ex AT ex				{ $$=$2; $$->push($1); $$->push($3); } 
 	| ex ADD ex				{ $$=$2; $$->push($1); $$->push($3); } 
@@ -32,5 +35,6 @@ ex : scalar
 ;
 vector :					{ $$=new Vector(); }
 	| vector ex				{ $$=$1; $$->push($2); }
+	| vector DOC			{ $$=$1; $$->doc=$2->val; }
 ;
 %%
