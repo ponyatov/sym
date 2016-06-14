@@ -4,37 +4,23 @@ string LexString;
 %}
 %option noyywrap
 %option yylineno
-
 %x lexstring
-%x docstring
 %%
 #[^\n]*				{}
 ^\.end				{yyterminate();}
 
-\"					{BEGIN(docstring); LexString=""; }
-<docstring>\"		{BEGIN(INITIAL); yylval.o=new Str(LexString); return DOC; }
-<docstring>\\n		{LexString+='\n';}
-<docstring>\\t		{LexString+='\t';}
-<docstring>\n		{LexString+=yytext[0];}
-<docstring>\\.		{LexString+=yytext[1];}
-<docstring>.		{LexString+=yytext[0];}
-
 '					{BEGIN(lexstring); LexString=""; }
 <lexstring>'		{BEGIN(INITIAL); yylval.o=new Str(LexString); return STR; }
-<lexstring>\\n		{LexString+='\n';}
-<lexstring>\\t		{LexString+='\t';}
-<lexstring>\n		{LexString+=yytext[0];}
-<lexstring>\\.		{LexString+=yytext[1];}
 <lexstring>.		{LexString+=yytext[0];}
 
-\(					TOC(Op,LP)
+\(					TOC(Op,LP)			/* brackets */
 \)					TOC(Op,RP)
 \[					TOC(Op,LQ)
 \]					TOC(Op,RQ)
 \{					TOC(Op,LC)
 \}					TOC(Op,RC)
 
-\=					TOC(Op,EQ)
+\=					TOC(Op,EQ)			/* operators */
 \@					TOC(Op,AT)
 \~					TOC(Op,TILD)
 
@@ -44,7 +30,7 @@ string LexString;
 \/					TOC(Op,DIV)
 \^					TOC(Op,POW)
 
+[a-zA-Z0-9_.]+		TOC(Sym,SYM)		/* symbol */
 
-[a-zA-Z0-9_.]+		TOC(Sym,SYM)
 [ \t\r\n]+			{}
 %%

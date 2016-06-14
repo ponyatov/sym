@@ -1,60 +1,40 @@
-#ifndef _H_SYM
-#define _H_SYM
+#ifndef _H_HPP
+#define _H_HPP
 
 #include <iostream>
-#include <sstream>
 #include <cstdlib>
-#include <cassert>
 #include <vector>
 #include <map>
 using namespace std;
 #include "meta.hpp"
 
-#ifndef __MINGW32__
-	#include "linux.hpp"	// and all POSIX systems
-#else
-	#include "win32.hpp"	// win32 specific code
-#endif
-
 struct Sym {
 	string tag,val;
 	Sym(string,string); Sym(string);
-	vector<Sym*> nest; void push(Sym*);
-	map<string,Sym*> pars; void doc(Sym*);
+	vector<Sym*> nest; void push(Sym*); Sym* pop();
 	virtual string dump(int=0); virtual string head(); string pad(int);
-	virtual Sym* eval();
 	virtual Sym* str();
+	virtual Sym* eval();
 	virtual Sym* eq(Sym*);
-	virtual Sym* at(Sym*);
 	virtual Sym* add(Sym*);
-	virtual Sym* sub(Sym*);
-	virtual Sym* mul(Sym*);
 	virtual Sym* div(Sym*);
 	virtual Sym* pow(Sym*);
-	virtual Sym* plain();
-	virtual int sz();
-	static Sym* sz(Sym*);
 };
 extern map<string,Sym*> glob;
 extern void glob_init();
 
 struct Error: Sym { Error(string); };
 
-struct Int: Sym { Int(string); Int(int); int val; string head(); };
+struct Var: Sym { Var(string,Sym*); Sym*str(); };
 
-struct Str: Sym { Str(string); string head(); Sym*add(Sym*); Sym*eval(); };
+struct Str: Sym { Str(string); string head(); Sym*add(Sym*); };
 
-struct Vector: Sym { Vector(); Sym*str(); Sym*div(Sym*); Sym*add(Sym*);
-	static Sym* _plain(Sym*); };
+struct Vector: Sym { Vector(); Sym*div(Sym*); Sym*pow(Sym*); Sym*str(); };
 
 struct Op: Sym { Op(string); Sym*eval(); };
-typedef Sym* (*FN)(Sym*);
+
+typedef Sym*(*FN)(Sym*);
 struct Fn: Sym { Fn(string,FN); FN fn; Sym*at(Sym*); };
-
-struct Dir: Sym { Dir(string); static Sym* dir(Sym*); Sym*div(Sym*o); };
-struct File: Sym { File(string); ~File(); static Sym* file(Sym*); FILE*fh; Sym*eq(Sym*o); };
-
-struct Var: Sym { Var(string); };
 
 extern int yylex();
 extern int yylineno;
@@ -64,4 +44,4 @@ extern int yyparse();
 extern void yyerror(string);
 #include "ypp.tab.hpp"
 
-#endif // _H_SYM
+#endif // _H_HPP
