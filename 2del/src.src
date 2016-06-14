@@ -1,0 +1,58 @@
+# line comment
+
+next = dir@MODULE						" next generation "
+
+( README.md = next/'README.md' ) = [	" README "
+	'# ![logo]('+LOGO+'.png) '+MODULE
+	'### '+ABOUT
+	'\n(c) '+AUTHOR+' , '+LICENSE
+	'\ngithub: '+GITHUB
+]/nl+nl
+
+( .gitignore = next/'gitignore' ) = [	" file masks will be ignored by git "
+	'*~' '*swp'
+	exe.exe log.log
+	'ypp.tab.?pp' lex.yy.c
+	MODULE+'/'
+]/nl+nl
+
+skelex = [						" lexical skeleton program "
+	files = plain @ [				" files to be opened in editor "
+		src.src						" default source script "
+		log.log
+		core = [					" dynamic language core "
+			ypp.ypp 					" syntax parser /bison/ "
+			lpp.lpp						" lexer /flex/ "
+			hpp.hpp 					" headers "
+			cpp.cpp						" C++ core /g++/ "
+			Makefile					" build scripts /make/ "
+		]
+	] 
+	.gitignore					
+	vim = [ sh.sh bat.bat ]		" (g)vim helpers "
+	README.md
+]
+
+( sh.sh	  = next/sh.sh   ) = [ '#!/bin/sh'  'gvim -p '+files/sp ]/nl+nl
+( bat.bat = next/bat.bat ) = [ '@start .'  '@gvim -p '+files/sp ]/nl+nl 
+
+exe.exe = './exe.exe'
+( Makefile = next/'Makefile' ) = [
+
+	[ '#' MODULE ':' ABOUT]/sp nl
+	[ '#' '(c)' AUTHOR ',' LICENSE ]/sp nl
+	'MODULE = $(notdir $(CURDIR))' nl
+	['OS''?=''linux']/sp nl
+	[ log.log ':' src.src exe.exe ]/sp nl
+	tab [ exe.exe '<' '$<' '>' '$>' log.log '&&' 'tail' '$(TAIL)' '$@' ]/sp nl
+	
+	[ 'C''=' cpp.cpp '$(OS).cpp' ypp.tab.cpp lex.yy.c ]/sp nl 
+	[ 'H''=' hpp.hpp '$(OS).hpp' ypp.tab.hpp meta.hpp ]/sp nl
+	
+	[ 'CXXFLAGS''+=''-std=gnu++11''-D''MODULE=\"$(MODULE)\"']/sp nl
+	[ exe.exe ':' '$(C)' '$(H)' ]/sp nl
+	tab [ '$(CXX)' '$(CXXFLAGS)' '-o' '$@' '$(C)' '$(L)' ]/sp nl
+	
+	[ ypp.tab.cpp ':' ypp.ypp ]/sp nl tab bison sp '$<' nl
+	[ lex.yy.c ':' lpp.lpp ]/sp nl tab flex sp '$<' nl
+]
