@@ -30,7 +30,7 @@ string LexString;
 \/					TOC(Op,DIV)
 \^					TOC(Op,POW)
 
-[a-zA-Z0-9_.]+		TOC(Sym,SYM)		/* symbol */
+[a-zA-Z0-9_.?]+		TOC(Sym,SYM)		/* symbol */
 
 [ \t\r\n]+			{}
 %%
