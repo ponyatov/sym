@@ -11,6 +11,7 @@ string LexString;
 
 '					{BEGIN(lexstring); LexString=""; }
 <lexstring>'		{BEGIN(INITIAL); yylval.o=new Str(LexString); return STR; }
+<lexstring>\\.		{LexString+=yytext[1];}
 <lexstring>.		{LexString+=yytext[0];}
 
 \(					TOC(Op,LP)			/* brackets */
