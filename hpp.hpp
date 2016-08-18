@@ -7,6 +7,12 @@
 #include <vector>
 #include <map>
 using namespace std;
+#ifdef __MINGW32__
+#include <direct.h>
+#else
+#include <sys/stat.h>
+#endif
+
 #include "meta.hpp"
 
 struct Sym {
@@ -40,6 +46,10 @@ struct Op: Sym { Op(string); Sym*eval(); void share(); };
 
 typedef Sym*(*FN)(Sym*);
 struct Fn: Sym { Fn(string,FN); FN fn; Sym*at(Sym*); };
+
+// file i/o extension
+struct Dir: Sym { Dir(string); };
+struct File: Sym { File(string); };
 
 extern int yylex();
 extern int yylineno;
